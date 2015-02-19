@@ -1,0 +1,59 @@
+#name: Hit and miss
+#desc: Set of images with different settings
+#author: kopper
+
+program=getExposureProgramMode()
+while program != "M"
+    message("Set 'M' mode and press 'OK'")
+    program=getExposureProgramMode()
+endwhile
+afMode=getAFModeSelect()
+a3=getEnableBracketing()
+a5=getExposureIndex()
+a6=getExposureTime()
+a7=getFnumber()
+
+values=arrayCreate( ...
+    arrayCreate("100",1/4000.0,22), ...
+    arrayCreate("100",1/1000.0,22), ...
+    arrayCreate("100",1/250.0,22), ...
+    arrayCreate("100",1/250.0,11), ...
+    arrayCreate("100",1/250.0,5.6), ...
+    arrayCreate("100",1/60.0,5.6), ...
+    arrayCreate("100",1/15.0,5.6), ...
+    arrayCreate("100",1/4.0,5.6), ...
+    arrayCreate("100",1.0,5.6), ...
+    arrayCreate("100",4.0,5.6), ...
+    arrayCreate("100",8.0,3.5), ...
+    arrayCreate("100",30.0,3.5), ...
+    arrayCreate("400",30.0,3.5), ...
+    arrayCreate("1600",30.0,3.5) ...
+        )
+
+count=inputNumber("Number of photos... (5-"+arraySize(values)+")",5,arraySize(values))
+
+setEnableBracketing(0) #disable bracketing
+
+if afMode!="MF(f)"  #init focus
+    setAFModeSelect("AF-S")
+    performAF()
+    setAFModeSelect("MF")
+endif
+while a < count
+    setExposureIndex(arrayGet(arrayGet(values,a),0))
+    setExposureTime(arrayGet(arrayGet(values,a),1))
+    setFnumber(arrayGet(arrayGet(values,a),2))
+    capture()
+    a=a+1
+endwhile
+
+if afMode!="MF(f)"
+    setAFModeSelect(afMode)
+endif
+setExposureIndex(a5)
+setExposureTime(a6)
+setFnumber(a7)
+
+setEnableBracketing(a3)
+
+log("Created...")
