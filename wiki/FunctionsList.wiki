@@ -71,7 +71,7 @@ takes photo
 {{{
 performAF()
 }}}
-tries to set focus on frame.  is ignored when manual focus is set
+tries to set focus on frame. command is ignored when manual focus is set
 
 = Camera properties functions =
 
