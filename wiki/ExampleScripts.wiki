@@ -1,4 +1,4 @@
-#summary Several scripts
+#summary List of example scripts
 
 [ScriptGetterTest]
 
@@ -9,4 +9,3 @@
 [ScriptOkToCapture]
 
 [ScriptSelfTimer]
-
