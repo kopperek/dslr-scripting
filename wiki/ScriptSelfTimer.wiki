@@ -1,0 +1,44 @@
+#summary Self timer script
+
+= Self timer =
+
+{{{
+#name: Self timer
+#desc: Any number of photos after chosen time
+#author: kopper
+
+afMode=getAFModeSelect()
+enableBracketing=getEnableBracketing()
+
+setEnableBracketing(0) #disable bracketing
+
+delay=inputNumber("Delay time... (1-300s)",1,300)
+count=inputNumber("Number of photos... (1-30s)",1,30)
+if count>1
+    extraDelay=inputNumber("Extra delay between images... (0-10s)",0,10)
+endif
+
+wait(delay*10)
+
+if afMode!="MF[f]"  #init focus
+    setAFModeSelect("AF-S")
+    performAF()
+    setAFModeSelect("MF")
+endif
+
+while a<count
+    log("##")
+    log("## Image "+(a+1)+"/"+count)
+    log("##")
+    capture()
+    if a!=count-1
+        wait(extraDelay*10)
+    endif
+    a=a+1
+endwhile
+
+if afMode!="MF[f]"
+    setAFModeSelect(afMode)
+endif
+setEnableBracketing(enableBracketing)
+}}}
