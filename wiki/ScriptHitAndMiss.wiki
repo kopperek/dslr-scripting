@@ -1,4 +1,4 @@
-#summary Hit and miss
+#summary Hit and miss script
 
 = Hit and miss =
 
