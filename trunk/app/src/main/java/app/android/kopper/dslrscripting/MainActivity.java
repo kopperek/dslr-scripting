@@ -1,3 +1,18 @@
+/*
+ * Created by kopper on 21.02.15 11:46
+ * (C) Copyright 2015 kopperek@gmail.com
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 2.1 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl-2.1.html
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
+
 package app.android.kopper.dslrscripting;
 
 import android.app.ListActivity;
@@ -52,7 +67,7 @@ public class MainActivity extends ListActivity {
 
                 int selection=myAdapter.getSelection();
                 if(selection==-1) {
-                    Toast.makeText(getApplicationContext(),"You have to select script",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.error_select_script),Toast.LENGTH_SHORT).show();
                     return;
                 }
                 try {
@@ -81,7 +96,7 @@ public class MainActivity extends ListActivity {
                 try {
                     scripts.add(new ScriptFile(file));
                 } catch(IOException e) {
-                    LogUtil.e("",e);
+                    LogUtil.e(e);
                 }
         }
 
@@ -107,7 +122,6 @@ public class MainActivity extends ListActivity {
     @Override
     public Object onRetainNonConfigurationInstance() {
         Integer selection=myAdapter.getSelection();
-        LogUtil.i("onRetainNonConfigurationInstance: "+selection);
         return selection;
     }
 

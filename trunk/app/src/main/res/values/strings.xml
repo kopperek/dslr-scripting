@@ -8,15 +8,48 @@
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
     <string name="layout_start_button">Start</string>
-    <string name="title_activity_main_activity2">MainActivity2</string>
-    <string name="hello_world">Hello world!</string>
     <string name="error_not_a_number">Not a number</string>
     <string name="error_number_to_low">Number to low</string>
     <string name="error_number_to_high">Number to high</string>
 
     <string name="select_folder">Select folder</string>
     <string name="action_select_dir">Select scripts directory</string>
+
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
 
+    <string formatted="false" name="error_array_size_2">Array size != 2 (%d)</string>
+    <string formatted="false" name="error_array_size_4">Array size != 4 (%d)</string>
+    <string formatted="false" name="error_array_size">Array size != %d (%d)</string>
+    <string formatted="false" name="error_cant_convert_to_boolean">Can\'t convert %s to boolean</string>
+    <string formatted="false" name="error_cant_convert_to_int">Can\'t convert %s to int</string>
+    <string name="error_first_parameter_has_to_be_an_array">First parameter has to be an array</string>
+    <string formatted="false" name="error_index_out_of_bounds">Index out of bounds (index: %d, array size: %d)</string>
+    <string formatted="false" name="error_method_requires_one">%s requires one parameter</string>
+    <string formatted="false" name="error_method_requires_two">%s requires two parameters</string>
+    <string name="error_parameter_has_to_be_an_array">Parameter has to be an array</string>
+    <string formatted="false" name="error_parameter_has_to_be_string">Argument has to be string (%s)</string>
+    <string formatted="false" name="error_parameter_is_not_valid">Argument is not valid (%s)</string>
+    <string formatted="false" name="error_unknown_value">Unknown value for argument (%s)</string>
+    <string formatted="false" name="error_method_requires_at_least_two">%s requires at least two parameters</string>
+    <string formatted="false" name="error_method_requires_no">%s requires no parameter</string>
+    <string formatted="false" name="error_method_requires_three">%s requires three parameters</string>
+    <string name="error_interrupted">Interrupted</string>
+    <string name="error_select_script">You have to select script</string>
+    <string formatted="false" name="error_permission_denied">Permission denied for device %s</string>
+    <string name="back_pressed">Back pressed</string>
+    <string name="cancel_pressed">Cancel pressed</string>
+    <string name="error_cant_send_command">Can\'t send command</string>
+    <string name="error_no_response">No response</string>
+    <string formatted="false" name="error_no_ok_response">Camera response: %s</string>
+    <string name="error_io_exception">IOException</string>
+    <string name="error_selected_script_doesnt_exist">Selected script file doesn\'t exist</string>
+    <string name="message_done">Task completed</string>
+    <string formatted="false" name="error">%s</string>
+    <string name="error_parse_endif">unexpected endif</string>
+    <string name="error_parse_endwhile">unexpected endwhile</string>
+    <string formatted="false" name="error_unknown_function">Unknown function: %s</string>
+    <string formatted="false" name="error_unknown_var">Unknown variable: %s</string>
+    <string formatted="false" name="error_localization">\nline no: %d\n%s</string>
+    <string name="error_no_valid_devices">No valid devices</string>
 </resources>

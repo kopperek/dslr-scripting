@@ -1,13 +1,17 @@
 package app.android.kopper.dslrscripting.command;
 
+import android.text.InputType;
+import android.widget.EditText;
+
 import java.util.ArrayList;
 
 import app.android.kopper.dslrscripting.IInputVerifier;
 import app.android.kopper.dslrscripting.IWorkerUtil;
+import app.android.kopper.dslrscripting.ProgressActivity;
 import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.inputer.TextInputInputter;
 import app.android.kopper.dslrscripting.util.ConvertUtil;
-import app.android.kopper.dslrscripting.util.LogUtil;
 
 /**
  * Created by kopper on 2015-02-08.
@@ -30,9 +34,9 @@ public class InputNumberCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()!=3)
-            throw new Exception(getName()+" requires three parameters");
+            throw new RException(R.string.error_method_requires_three,getName());
         String message=ConvertUtil.toString(params.get(0));
         final Integer minValue=ConvertUtil.toInteger(params.get(1));
         final Integer maxValue=ConvertUtil.toInteger(params.get(2));
@@ -53,9 +57,12 @@ public class InputNumberCommand extends AbstractCommand {
                     return (R.string.error_number_to_high);
                 return 0;
             }
+
+            @Override
+            public void updateLayout(ProgressActivity progressActivity) {
+                ((EditText)progressActivity.findViewById(R.id.input_value)).setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
         }));
-        Integer reInteger=Integer.valueOf(result);
-        LogUtil.i("reInteger: "+reInteger);
-        return reInteger;
+        return Integer.valueOf(result);
     }
 }

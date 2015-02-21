@@ -1,6 +1,7 @@
 package app.android.kopper.dslrscripting.command.converter;
 
 import app.android.kopper.dslrscripting.ByteArray;
+import app.android.kopper.dslrscripting.R;
 
 /**
  * Created by kopper on 2015-02-19.
@@ -24,13 +25,13 @@ public class FnumberConverter implements IConverter {
             result.put((long)(((Number)value).doubleValue()*100),2);
             return result.getArray();
         }
-        throw new ConvertException("Argument is not valid ("+value+")");
+        throw new ConvertException(R.string.error_parameter_is_not_valid,value);
     }
 
     @Override
     public Object convertFromArray(byte[] array) throws ConvertException {
         if(array.length!=2)
-            throw new ConvertException("Array size != 2 ("+array.length+") ");
+            throw new ConvertException(R.string.error_array_size_2,array.length);
         ByteArray result=new ByteArray(array);
         return result.get(2)/100.0;
     }

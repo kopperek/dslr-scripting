@@ -78,7 +78,6 @@ public class ProgressActivity extends Activity {
                     Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
                     while(deviceIterator.hasNext()){
                         UsbDevice device = deviceIterator.next();
-                        LogUtil.i(device.toString());
                         if(validDevice(device)) {
                             validDevice=device;
                             break;
@@ -87,24 +86,21 @@ public class ProgressActivity extends Activity {
                     if(validDevice!=null) {
                         manager.requestPermission(validDevice, mPermissionIntent);
                     } else {
-                        show(new VisualState(new DoneInputer("No valid devices"),new String[]{}));
+                        show(new VisualState(new DoneInputer(new int[]{R.string.error_no_valid_devices}),new String[]{}));
                     }
                 } catch(Exception e) {
                     LogUtil.e(e);
                 }
-                LogUtil.i("done...");
             }
         } catch(Exception e) {
             LogUtil.e(e);
         }
-        LogUtil.i("created");
     }
 
     private BroadcastReceiver createBrodcastReceiver() {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context,Intent intent) {
-                LogUtil.i("$$$ onReceive");
                 String action = intent.getAction();
                 //todo: deatach
                 if (ACTION_USB_PERMISSION.equals(action)) {
@@ -113,7 +109,6 @@ public class ProgressActivity extends Activity {
                         if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                             if(device != null){
                                 //call method to set up device communication
-                                LogUtil.d("permission gained for device "+device);
                                 for(int a=0;a<device.getInterfaceCount();a++) {
                                     LogUtil.d("interface #"+a+": "+device.getInterface(a).toString());
                                     for(int b=0;b<device.getInterface(a).getEndpointCount();b++) {
@@ -125,9 +120,7 @@ public class ProgressActivity extends Activity {
                             }
                         }
                         else {
-                            String errorMessage="Permission denied for device "+device;
-                            LogUtil.d(errorMessage);
-                            show(new VisualState(new DoneInputer(errorMessage),new String[]{}));
+                            show(new VisualState(new DoneInputer(new int[]{R.string.error_permission_denied}),new String[]{}));
                         }
                     }
                 }
@@ -138,9 +131,6 @@ public class ProgressActivity extends Activity {
     private void startScript(UsbDevice device) {
         try {
             worker=new Worker(this);
-            LogUtil.i("intent: "+getIntent());
-            LogUtil.i("extras: "+getIntent().getExtras());
-            LogUtil.i("path: "+getIntent().getExtras().getString(SCRIPT_PATH));
             worker.execute(new WorkerParams((UsbManager)getSystemService(Context.USB_SERVICE),device,getResources(),getIntent().getExtras().getString(SCRIPT_PATH)));
         } catch(Exception e) {
             LogUtil.e(e);
@@ -169,7 +159,8 @@ public class ProgressActivity extends Activity {
 
     private boolean validDevice(UsbDevice device) {
         LogUtil.d("isValidDevice: "+device);
-        return(device.getProductId()==1065&&device.getVendorId()==1200);
+//        return(device.getProductId()==1065&&device.getVendorId()==1200); //D5100
+        return(true);
     }
 
     @Override
@@ -183,13 +174,13 @@ public class ProgressActivity extends Activity {
     @Override
     public void onBackPressed() {
         if(worker!=null)
-            worker.interrupt("Back pressed");
+            worker.interrupt(R.string.back_pressed);
         super.onBackPressed();
     }
 
     public void interrupt() {
         if(worker!=null)
-            worker.interrupt("Cancel pressed");
+            worker.interrupt(R.string.cancel_pressed);
     }
 
     public void inputResult(Object inputtedResult) {

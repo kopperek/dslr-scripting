@@ -14,9 +14,8 @@ package app.android.kopper.dslrscripting;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  */
-public class InterruptedException extends Exception {
-
-    public InterruptedException(String detailMessage) {
-        super(detailMessage);
+public class InterruptedException extends RException {
+    public InterruptedException(int key,Object... params) {
+        super(key,params);
     }
 }

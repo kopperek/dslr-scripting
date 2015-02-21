@@ -1,6 +1,7 @@
 package app.android.kopper.dslrscripting.command.converter;
 
 import app.android.kopper.dslrscripting.ByteArray;
+import app.android.kopper.dslrscripting.R;
 
 /**
  * Created by kopper on 2015-02-14.
@@ -34,7 +35,7 @@ public class UnsignedConverter implements IArrayConverter {
     @Override
     public Integer convertFromArrayToInt(byte[] value) throws ConvertException {
         if(value.length!=bytes)
-            throw new ConvertException("Array size != "+bytes+" ("+value.length+") ");
+            throw new ConvertException(R.string.error_array_size,bytes,value.length);
         return Integer.valueOf((int)new ByteArray(value).get(bytes));
     }
 }

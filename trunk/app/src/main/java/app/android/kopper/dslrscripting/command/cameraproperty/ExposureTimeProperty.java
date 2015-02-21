@@ -3,6 +3,7 @@ package app.android.kopper.dslrscripting.command.cameraproperty;
 import java.util.Arrays;
 
 import app.android.kopper.dslrscripting.ByteArray;
+import app.android.kopper.dslrscripting.R;
 import app.android.kopper.dslrscripting.command.converter.ConvertException;
 import app.android.kopper.dslrscripting.command.converter.IConverter;
 import app.android.kopper.dslrscripting.constants.DeviceProp;
@@ -38,16 +39,15 @@ public class ExposureTimeProperty extends AbstractCameraProperty {
                         return (getBulbArray());
                     ByteArray result=new ByteArray(4);
                     result.put((long)((Double)value*10000),4);
-                    LogUtil.i(result.toString());
                     return result.getArray();
                 }
-                throw new ConvertException("Argument is not valid ("+value+")");
+                throw new ConvertException(R.string.error_parameter_is_not_valid,value);
             }
 
             @Override
             public Object convertFromArray(byte[] array) throws ConvertException {
                 if(array.length!=4)
-                    throw new ConvertException("Array size != 4 ("+array.length+") ");
+                    throw new ConvertException(R.string.error_array_size_4,array.length);
                 if(Arrays.equals(array,getBulbArray()))
                     return(0.0);
                 ByteArray result=new ByteArray(array);

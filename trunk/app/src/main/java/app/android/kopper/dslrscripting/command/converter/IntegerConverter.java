@@ -1,5 +1,7 @@
 package app.android.kopper.dslrscripting.command.converter;
 
+import app.android.kopper.dslrscripting.R;
+
 /**
  * Created by kopper on 2015-02-14.
  * (C) Copyright 2015 kopperek@gmail.com
@@ -27,7 +29,7 @@ public class IntegerConverter implements IConverter<Integer> {
         if (value instanceof Integer)
             return(converter.convertFromIntToArray((Integer)value));
         else
-            throw new ConvertException("Unknown value for argument ("+value+")");
+            throw new ConvertException(R.string.error_parameter_is_not_valid,value);
     }
 
     @Override

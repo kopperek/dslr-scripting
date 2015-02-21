@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
+import app.android.kopper.dslrscripting.R;
+
 /**
  * <p>Femto Script - This is the main FScript package class</p>
  * <p>
@@ -129,7 +131,7 @@ public class FScript implements FSExtension{
      * @return Object - currently expected to be String, Integer or Double
      */
     public Object getVar(String name,Object index)throws FSException {
-        throw new FSUnsupportedException(name,code.getCurLine(),code.getLineAsString(),null,null,null);
+        throw new FSException(R.string.error_unknown_var,code.getCurLine(),code.getLineAsString(),null,null,null,name);
     }
     
     
@@ -140,7 +142,7 @@ public class FScript implements FSExtension{
      * @param value the value to set it to
      */
     public void setVar(String name,Object index,Object value) throws FSException {
-        throw new FSUnsupportedException(name,code.getCurLine(),code.getLineAsString(),null,null,null);
+        throw new FSException(R.string.error_unknown_var,code.getCurLine(),code.getLineAsString(),null,null,null,name);
     }
     
     
@@ -153,7 +155,7 @@ public class FScript implements FSExtension{
      * @return an Object, currently expected to be Integer or String
      */
     public Object callFunction(String name, ArrayList params) throws FSException {
-        throw new FSUnsupportedException(name,code.getCurLine(),code.getLineAsString(),null,null,null);
+        throw new FSException(R.string.error_unknown_function,code.getCurLine(),code.getLineAsString(),null,null,null,name);
     }
     
     

@@ -3,6 +3,7 @@ package app.android.kopper.dslrscripting.util;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import app.android.kopper.dslrscripting.R;
 import app.android.kopper.dslrscripting.command.converter.ConvertException;
 
 /**
@@ -28,7 +29,7 @@ public class ConvertUtil {
             return (((Number)o).intValue());
         else if(o instanceof String)
             return (new BigDecimal((String)o).intValue());
-        throw new ConvertException("Can't convert "+o+" to int");
+        throw new ConvertException(R.string.error_cant_convert_to_int,o);
     }
 
     public static Boolean toBoolean(Object o) throws ConvertException  {
@@ -39,7 +40,7 @@ public class ConvertUtil {
             int i=((Number)o).intValue();
             return new Boolean(i!=0);
         }
-        throw new ConvertException("Can't convert "+o+" to boolean");
+        throw new ConvertException(R.string.error_cant_convert_to_boolean,o);
 
     }
 

@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +94,7 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
     private ProgressActivity activity;
 
     private static List<ICommand> commands=new LinkedList<>();
-    private static AbstractCameraProperty[] propertiesCommands;
+    private static AbstractCameraProperty[] cameraProperties;
 
     static {
 
@@ -114,7 +113,7 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
 
         commands.add(new CaptureCommand());
 
-        propertiesCommands=new AbstractCameraProperty[]{
+        cameraProperties=new AbstractCameraProperty[]{
                 new ActiveDLightingProperty(),
                 new AEBracketingCountProperty(),
                 new AEBracketingStepProperty(),
@@ -150,14 +149,15 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
                 new StillCaptureModeProperty(),
                 new BurstNumberProperty()
         };
-        for(AbstractCameraProperty cameraProperty:propertiesCommands)
+        for(AbstractCameraProperty cameraProperty: cameraProperties)
             commands.addAll(cameraProperty.getCommands());
 
     }
 
     private Thread threadForUnpark=null;
     private Object inputtedResult=null;
-    private String interruptedMessage=null;
+
+    private Integer interruptedMessageKey=null;
 
     private Map<String,Object> vars=new HashMap<>();
 
@@ -169,7 +169,7 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
     @Override
     protected Object doInBackground(WorkerParams... params) {
 
-        interruptedMessage=null;
+        interruptedMessageKey=null;
 
         UsbDevice device=params[0].getDevice();
         UsbManager manager=params[0].getUsbManager();
@@ -180,11 +180,11 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
 
         final UsbDeviceConnection connection = manager.openDevice(device);
         boolean claimInterface=connection.claimInterface(usbInterface,true);
-        LogUtil.d("claimInterface: "+claimInterface);
 
-        publishProgress(new VisualState(new ProgressInputer(),getLogEvents("Init")));
+        publishProgress(new VisualState(new ProgressInputer(),getLogEvents(null)));
 
-        String finalMessage=null;
+        int[] finalMessageKeys=new int[]{};
+        Object[] finalMessageParams=new Object[]{};
         try {
             FScript script=new FScript() {
 
@@ -207,6 +207,16 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
                     if(command!=null) {
                         try {
                             return command.execute(params,new IWorkerUtil() {
+
+                                @Override
+                                public void waitWhile(int time) throws RException {
+                                    try {
+                                        Thread.sleep(time);
+                                    } catch(java.lang.InterruptedException e) {
+                                        throw new RException(R.string.error_interrupted);
+                                    }
+                                }
+
                                 @Override
                                 public boolean isInterrupted() throws InterruptedException {
                                     checkInterruption();
@@ -220,13 +230,13 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
                                 }
 
                                 @Override
-                                public void cameraCommand(PureCommand command) throws Exception {
+                                public void cameraCommand(PureCommand command) throws RException {
                                     checkInterruption();
                                     command.execute(inEndpoint,outEndpoint,connection);
                                 }
 
                                 @Override
-                                public void waitForNoBusy() throws Exception {
+                                public void waitForNoBusy() throws RException {
                                     for(;;) {
                                         try {
                                             checkInterruption();
@@ -234,10 +244,9 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
                                             checkCommand.execute(inEndpoint,outEndpoint,connection);
                                             break;
                                         } catch(NoOKResponseCodeException e) {
-                                            LogUtil.i("err: "+e);
                                             if(e.getResponseCode()!=0x2019)
                                                 throw e;
-                                            Thread.sleep(100);
+                                            waitWhile(100);
                                         }
                                     }
                                 }
@@ -252,38 +261,26 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
                                     LockSupport.park();
                                     checkInterruption();
                                     publishProgress(new VisualState(new ProgressInputer(),getLogEvents(null)));
-                                    LogUtil.i("inputtedResult##: "+inputtedResult);
-                                    return(inputtedResult);
-                                }
-
-                                @Override
-                                public void openPreview() {
-                                    LogUtil.i("openPreview: activity: "+activity);
-                                    //publishProgress(new VisualState(R.layout.buttons_progress,"",getLogEvents(null)));
+                                    return (inputtedResult);
                                 }
                             });
-                        } catch(Exception e) {
+                        } catch(RException e) {
                             LogUtil.e(e);
-                            throw new FSException(e.getMessage(),getCode().getCurLine(),getCode().getLineAsString(),null,null,null);
+                            throw new FSException(e.getKey(),getCode().getCurLine(),getCode().getLineAsString(),null,null,null,e.getParams());
                         }
                     } else
-                        return(super.callFunction(name,params));
-                };
+                        return (super.callFunction(name,params));
+                }
+
+                ;
             };
-
-
-//            for(AbstractCameraProperty prop : propertiesCommands) {
-//                script.loadLine("log(\"=> "+prop.getPropertyName()+"\")");
-//                script.loadLine("log(get"+prop.getPropertyName()+"())");
-//            }
-
 
             String scriptPath=params[0].getSelectedScript();
             if(scriptPath==null)
                 throw new NullPointerException("Script path is null");
             File scriptFile=new File(scriptPath);
             if(!scriptFile.exists())
-                throw new IOException("Selected script file doesn't exist");
+                throw new RException(R.string.error_selected_script_doesnt_exist);
             InputStreamReader reader=new InputStreamReader(new FileInputStream(scriptFile));
             script.load(reader);
             reader.close();
@@ -295,25 +292,32 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
             EventDispatcher.init(inEndpoint,outEndpoint,connection,new IEventExceptionListener() {
                 @Override
                 public void exception(Exception e) {
-                    interrupt(e.getLocalizedMessage());
+                    LogUtil.e(e);
+                    interrupt(R.string.error_io_exception);
                 }
             });
-            //set host mode
-//            changeCameraMode(inEndpoint,outEndpoint,connection,(long)0x01);
 
             script.run();
-            finalMessage="Task completed";
+            finalMessageKeys=new int[]{R.string.message_done};
+        } catch (FSException e) {
+            LogUtil.e(e);
+            finalMessageKeys=new int[]{e.getKey(),R.string.error_localization};
+            Object[] orygParams=e.getParams();
+            finalMessageParams=new Object[orygParams.length+2];
+            System.arraycopy(orygParams,0,finalMessageParams,0,orygParams.length);
+            finalMessageParams[orygParams.length]=e.getLineNo();
+            finalMessageParams[orygParams.length+1]=e.getLine();
+        } catch(RException e) {
+            LogUtil.e(e);
+            finalMessageKeys=new int[]{e.getKey()};
+            finalMessageParams=e.getParams();
         } catch(Exception e) {
             LogUtil.e(e);
-            finalMessage=e.getLocalizedMessage();
-        } finally {
+            finalMessageKeys=new int[]{R.string.error};
+            finalMessageParams=new Object[]{e.getLocalizedMessage()};
+        }
+        finally {
             EventDispatcher.done();
-//            try {
-//                changeCameraMode(inEndpoint,outEndpoint,connection,(long)0x00);
-//            } catch(Exception e) {
-//                LogUtil.e(e);
-//            }
-
             PureCommand sessionCommand=new PureCommand(PureCommand.CLOSE_SESSION);
             try {
                 sessionCommand.execute(inEndpoint,outEndpoint,connection);
@@ -325,20 +329,13 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
             connection.releaseInterface(usbInterface);
             connection.close();
         }
-        publishProgress(new VisualState(new DoneInputer(finalMessage),getLogEvents("Done")));
-        LogUtil.i("done");
+        publishProgress(new VisualState(new DoneInputer(finalMessageKeys,finalMessageParams),getLogEvents(null)));
         return(null);
     }
 
-    private void changeCameraMode(UsbEndpoint inEndpoint,UsbEndpoint outEndpoint,UsbDeviceConnection connection,Long mode) throws Exception {
-        PureCommand pc=new PureCommand(PureCommand.CHANGE_CAMERA_MODE);
-        pc.addParam(mode);
-        pc.execute(inEndpoint,outEndpoint,connection);
-    }
-
     private void checkInterruption() throws InterruptedException {
-        if(interruptedMessage!=null)
-            throw new InterruptedException(interruptedMessage);
+        if(interruptedMessageKey!=null)
+            throw new InterruptedException(interruptedMessageKey);
     }
 
     private ICommand findCommand(String name) {
@@ -374,9 +371,9 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
         unpark();
     }
 
-    public void interrupt(String interruptedMessage) {
+    public void interrupt(int key) {
         //todo: send interrupted message to dslr
-        this.interruptedMessage=interruptedMessage;
+        this.interruptedMessageKey=key;
         unpark();
     }
 
@@ -386,5 +383,4 @@ public class Worker extends AsyncTask<WorkerParams,VisualState,Object> {
             threadForUnpark=null;
         }
     }
-
 }

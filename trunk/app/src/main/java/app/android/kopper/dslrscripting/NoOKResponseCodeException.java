@@ -17,7 +17,7 @@ import java.util.Map;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  */
-public class NoOKResponseCodeException extends Exception {
+public class NoOKResponseCodeException extends RException {
     private final int responseCode;
     private final ByteArray resultArray;
 
@@ -70,7 +70,7 @@ public class NoOKResponseCodeException extends Exception {
     }
 
     public NoOKResponseCodeException(int responseCode,ByteArray resultArray) {
-        super(responseCode+": "+resultArray.toString());
+        super(R.string.error_no_ok_response, codes.get(responseCode)==null?"???":codes.get(responseCode));
         this.responseCode=responseCode;
         this.resultArray=resultArray;
     }
@@ -81,11 +81,5 @@ public class NoOKResponseCodeException extends Exception {
 
     public ByteArray getResultArray() {
         return resultArray;
-    }
-
-    @Override
-    public String getMessage() {
-        String errorMessage=codes.get(responseCode);
-        return errorMessage==null?super.getMessage():errorMessage;
     }
 }

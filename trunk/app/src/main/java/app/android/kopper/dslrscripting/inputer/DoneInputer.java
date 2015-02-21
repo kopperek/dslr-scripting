@@ -22,10 +22,13 @@ import app.android.kopper.dslrscripting.R;
  * Lesser General Public License for more details.
  */
 public class DoneInputer implements IInputer {
-    private final String message;
 
-    public DoneInputer(String message) {
-        this.message=message;
+    private final int[] messageKeys;
+    private final Object[] params;
+
+    public DoneInputer(int[] messageKeys, Object ... params) {
+        this.messageKeys=messageKeys;
+        this.params=params;
     }
 
     @Override
@@ -38,6 +41,11 @@ public class DoneInputer implements IInputer {
                 progressActivity.finish();
             }
         });
-        ((TextView)progressActivity.findViewById(R.id.message)).setText(message);
+
+        StringBuffer sb=new StringBuffer();
+        for(int key:messageKeys) {
+            sb.append(progressActivity.getString(key));
+        }
+        ((TextView)progressActivity.findViewById(R.id.message)).setText(String.format(sb.toString(),params));
     }
 }

@@ -1,0 +1,10 @@
+#name: Ok to capture
+#desc: Wait for 'OK' button and take photo
+#author: kopper
+
+test()
+
+while 1
+    message("Press 'OK' to take photo")
+    capture()
+endwhile

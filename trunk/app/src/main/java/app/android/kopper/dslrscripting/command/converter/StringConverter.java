@@ -2,6 +2,8 @@ package app.android.kopper.dslrscripting.command.converter;
 
 import java.util.Map;
 
+import app.android.kopper.dslrscripting.R;
+
 /**
  * Created by kopper on 2015-02-14.
  * (C) Copyright 2015 kopperek@gmail.com
@@ -26,16 +28,20 @@ public class StringConverter implements IConverter<String> {
         this.values=values;
     }
 
+    public Map<String,Integer> getValues() {
+        return values;
+    }
+
     @Override
     public byte[] convertToArray(Object value) throws ConvertException {
         if(value instanceof String) {
             Integer val=values.get(value);
             if(val==null)
-                throw new ConvertException("Unknown value for argument ("+value+")");
+                throw new ConvertException(R.string.error_unknown_value,value);
             return(converter.convertFromIntToArray(val));
 
         } else
-            throw new ConvertException("Argument has to be string ("+value+")");
+            throw new ConvertException(R.string.error_parameter_has_to_be_string,value);
     }
 
     @Override
@@ -44,6 +50,6 @@ public class StringConverter implements IConverter<String> {
         for(String res:values.keySet())
             if(values.get(res).equals(value))
                 return(res);
-        throw new ConvertException("Unknown value ("+value+")");
+        throw new ConvertException(R.string.error_unknown_value,value);
     }
 }
