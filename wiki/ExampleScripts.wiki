@@ -1,11 +1,11 @@
-#summary List of example scripts
+#summary List of sample scripts
+
+[ScriptOkToCapture]
 
 [ScriptGetterTest]
 
 [ScriptHdr11]
 
 [ScriptHitAndMiss]
-
-[ScriptOkToCapture]
 
 [ScriptSelfTimer]
