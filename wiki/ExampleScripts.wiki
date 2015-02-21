@@ -1,0 +1,12 @@
+#summary Several scripts
+
+[ScriptGetterTest]
+
+[ScriptHdr11]
+
+[ScriptHitAndMiss]
+
+[ScriptOkToCapture]
+
+[ScriptSelfTimer]
+
