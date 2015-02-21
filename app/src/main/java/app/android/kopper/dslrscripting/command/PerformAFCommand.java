@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
 import app.android.kopper.dslrscripting.PureCommand;
+import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 
 /**
  * Created by kopper on 2015-02-07.
@@ -26,7 +28,9 @@ public class PerformAFCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
+        if(params.size()!=0)
+            throw new RException(R.string.error_method_requires_no,getName());
         PureCommand command=new PureCommand(PureCommand.AF_DRIVE);
         util.log("performAF()");
         util.cameraCommand(command);

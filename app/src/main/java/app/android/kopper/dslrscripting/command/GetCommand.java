@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import app.android.kopper.dslrscripting.ByteArray;
 import app.android.kopper.dslrscripting.IWorkerUtil;
 import app.android.kopper.dslrscripting.PureCommand;
+import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.command.converter.IConverter;
 import app.android.kopper.dslrscripting.constants.DeviceProp;
 
@@ -34,9 +36,9 @@ public class GetCommand extends AbstractCommand{
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()!=0)
-            throw new Exception(getName()+" requires no parameter");
+            throw new RException(R.string.error_method_requires_no,getName());
         PureCommand propValueCommand=new PureCommand(PureCommand.GET_DEVICE_PROP_VALUE);
         propValueCommand.addParam(Long.valueOf(property.getCode()));
         util.cameraCommand(propValueCommand);

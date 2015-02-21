@@ -3,6 +3,8 @@ package app.android.kopper.dslrscripting.command;
 import java.util.ArrayList;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
+import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.inputer.OkInputInputter;
 import app.android.kopper.dslrscripting.util.ConvertUtil;
 
@@ -27,9 +29,9 @@ public class MessageCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()!=1)
-            throw new Exception(getName()+" requires one parameter");
+            throw new RException(R.string.error_method_requires_one,getName());
         String i=ConvertUtil.toString(params.get(0));
         util.input(new OkInputInputter(i));
         return null;

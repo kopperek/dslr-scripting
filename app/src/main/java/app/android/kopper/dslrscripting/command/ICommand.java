@@ -3,6 +3,7 @@ package app.android.kopper.dslrscripting.command;
 import java.util.ArrayList;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
+import app.android.kopper.dslrscripting.RException;
 
 /**
  * Created by kopper on 2015-02-08.
@@ -19,6 +20,6 @@ import app.android.kopper.dslrscripting.IWorkerUtil;
  * Lesser General Public License for more details.
  */
 public interface ICommand {
-    Object execute(ArrayList params,IWorkerUtil util) throws Exception;
+    Object execute(ArrayList params,IWorkerUtil util) throws RException;
     String getName();
 }

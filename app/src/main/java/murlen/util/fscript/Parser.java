@@ -1,8 +1,10 @@
 package murlen.util.fscript;
 
-import java.io.*;
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import app.android.kopper.dslrscripting.R;
 
 /**
  * <b>Parser - Does the parsing - i.e it's the brains of the code.</b>
@@ -286,9 +288,9 @@ final class Parser {
                 break;
             }
             case LexAnn.TT_EIF:
-                throw new FSException("unexpected endif",code.getCurLine(),code.getLineAsString(),tok,vars, gVars);
+                throw new FSException(R.string.error_parse_endif,code.getCurLine(),code.getLineAsString(),tok,vars, gVars);
             case LexAnn.TT_EWHILE:
-                throw new FSException("unexpected endwhile",code.getCurLine(),code.getLineAsString(),tok,vars, gVars);
+                throw new FSException(R.string.error_parse_endwhile,code.getCurLine(),code.getLineAsString(),tok,vars, gVars);
 
             case LexAnn.TT_FUNC: {
                 parseFunc();
@@ -1440,7 +1442,7 @@ final class Parser {
 
     //format an error message and throw FSException
     private void parseError(String s) throws FSException {
-        throw new FSException(s,code.getCurLine(),code.getLineAsString(),tok,vars, gVars);
+        throw new FSException(R.string.error,code.getCurLine(),code.getLineAsString(),tok,vars, gVars,s);
     }
 
     //return the error block

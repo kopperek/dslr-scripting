@@ -2,6 +2,8 @@ package app.android.kopper.dslrscripting.command.converter;
 
 import java.util.Arrays;
 
+import app.android.kopper.dslrscripting.R;
+
 /**
  * Created by kopper on 2015-02-14.
  * (C) Copyright 2015 kopperek@gmail.com
@@ -32,7 +34,7 @@ public class BooleanConverter implements IConverter<Integer> {
         else if (value instanceof Integer)
             val=((Integer)value).intValue()!=0?1:0;
         else
-            throw new ConvertException("Unknown value for argument ("+value+")");
+            throw new ConvertException(R.string.error_unknown_value,value);
         return(converter.convertFromIntToArray(val));
     }
 

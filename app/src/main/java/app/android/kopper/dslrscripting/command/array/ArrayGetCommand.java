@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
+import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.command.AbstractCommand;
 import app.android.kopper.dslrscripting.util.ConvertUtil;
 
@@ -27,16 +29,16 @@ public class ArrayGetCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()!=2)
-            throw new Exception(getName()+" requires two parameters");
+            throw new RException(R.string.error_method_requires_two,getName());
         Object obj=params.get(0);
         if(!(obj instanceof List))
-            throw new Exception("First parameter has to be an array");
+            throw new RException(R.string.error_first_parameter_has_to_be_an_array);
         Integer index=ConvertUtil.toInteger(params.get(1));
         List array=(List)obj;
         if(index>=array.size())
-            throw new Exception("Index out of bounds (index: "+index+", array size: "+array.size()+")");
+            throw new RException(R.string.error_index_out_of_bounds,index,array.size());
         return(array.get(index));
     }
 }

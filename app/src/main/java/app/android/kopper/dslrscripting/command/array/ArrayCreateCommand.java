@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.command.AbstractCommand;
 
 /**
@@ -26,7 +27,7 @@ public class ArrayCreateCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         return new LinkedList(params);
     }
 }

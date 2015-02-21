@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import app.android.kopper.dslrscripting.util.LogUtil;
+
 /**
  * Created by kopper on 2015-02-07.
  * (C) Copyright 2015 kopperek@gmail.com
@@ -116,7 +118,7 @@ public class PureCommand {
         return(dataArray);
     }
 
-    public void execute(UsbEndpoint inEndpoint,UsbEndpoint outEndpoint,UsbDeviceConnection connection) throws Exception {
+    public void execute(UsbEndpoint inEndpoint,UsbEndpoint outEndpoint,UsbDeviceConnection connection) throws RException {
         synchronized(SEMAPHORE) {
             again:
             for(;;) {
@@ -126,49 +128,54 @@ public class PureCommand {
                 if(dataArray!=null)
                     sendArray(outEndpoint,connection,dataArray);
 
-                byte[] data=new byte[inEndpoint.getMaxPacketSize()];
-                loop:
-                for(;;) {
-                    ByteArrayOutputStream baos=new ByteArrayOutputStream();
-                    long messageTotalSize=0;
-                    long messageReceivedSize=0;
+                try {
+                    byte[] data=new byte[inEndpoint.getMaxPacketSize()];
+                    loop:
                     for(;;) {
-                        int received=connection.bulkTransfer(inEndpoint,data,data.length,5000); //auto focus can take a while
-                        if(received==0)
-                            continue;
-                        if(received>0) {
-                            ByteArray resultArray=new ByteArray(Arrays.copyOf(data,received));
-                            if(messageTotalSize==0)
-                                messageTotalSize=resultArray.get(4);
-                            baos.write(resultArray.getArray());
-                            messageReceivedSize+=received;
-                            if(messageReceivedSize==messageTotalSize)
-                                break;
-                        } else {
-                            throw new IOException("No response");
+                        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+                        long messageTotalSize=0;
+                        long messageReceivedSize=0;
+                        for(;;) {
+                            int received=connection.bulkTransfer(inEndpoint,data,data.length,5000); //auto focus can take a while
+                            if(received==0)
+                                continue;
+                            if(received>0) {
+                                ByteArray resultArray=new ByteArray(Arrays.copyOf(data,received));
+                                if(messageTotalSize==0)
+                                    messageTotalSize=resultArray.get(4);
+                                baos.write(resultArray.getArray());
+                                messageReceivedSize+=received;
+                                if(messageReceivedSize==messageTotalSize)
+                                    break;
+                            } else {
+                                throw new RException(R.string.error_no_response);
+                            }
                         }
+                        ByteArray resultArray=new ByteArray(baos.toByteArray());
+                        baos.close();
+                        long sessionId=resultArray.get(8,4);
+                        if(sessionId!=PureCommand.sessionId)
+                            continue;
+                        long blockType=resultArray.get(4,2);
+                        if(messageTotalSize==12&&blockType==3) {
+                            int responseCode=(int)resultArray.get(6,2);
+                            if(responseCode!=0x2001)
+                                throw new NoOKResponseCodeException(responseCode,resultArray);
+                            break loop;
+                        }
+                        else
+                            this.resultArray=new ByteArray(Arrays.copyOfRange(resultArray.getArray(),12,(int)messageTotalSize));
                     }
-                    ByteArray resultArray=new ByteArray(baos.toByteArray());
-                    baos.close();
-                    long sessionId=resultArray.get(8,4);
-                    if(sessionId!=PureCommand.sessionId)
-                        continue;
-                    long blockType=resultArray.get(4,2);
-                    if(messageTotalSize==12&&blockType==3) {
-                        int responseCode=(int)resultArray.get(6,2);
-                        if(responseCode!=0x2001)
-                            throw new NoOKResponseCodeException(responseCode,resultArray);
-                        break loop;
-                    }
-                    else
-                        this.resultArray=new ByteArray(Arrays.copyOfRange(resultArray.getArray(),12,(int)messageTotalSize));
+                } catch(IOException e) {
+                    LogUtil.e(e);
+                    throw new RException(R.string.error_io_exception);
                 }
                 break;
             }
         }
     }
 
-    private void sendArray(UsbEndpoint outEndpoint,UsbDeviceConnection connection,ByteArray byteArray) throws IOException {
+    private void sendArray(UsbEndpoint outEndpoint,UsbDeviceConnection connection,ByteArray byteArray) throws RException {
         int a;
         for(a=0;a<3;a++) {
             int transfered=connection.bulkTransfer(outEndpoint,byteArray.getArray(),byteArray.getSize(),2000);
@@ -176,7 +183,7 @@ public class PureCommand {
                 break;
         }
         if(a==3)
-            throw new IOException("Can't send command");
+            throw new RException(R.string.error_cant_send_command);
     }
 
     public ByteArray getResultArray() {

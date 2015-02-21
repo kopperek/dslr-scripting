@@ -34,7 +34,7 @@ count=inputNumber("Number of photos... (5-"+arraySize(values)+")",5,arraySize(va
 
 setEnableBracketing(0) #disable bracketing
 
-if afMode!="MF(f)"  #init focus
+if afMode!="MF[f]"  #init focus
     setAFModeSelect("AF-S")
     performAF()
     setAFModeSelect("MF")
@@ -47,7 +47,7 @@ while a < count
     a=a+1
 endwhile
 
-if afMode!="MF(f)"
+if afMode!="MF[f]"
     setAFModeSelect(afMode)
 endif
 setExposureIndex(a5)

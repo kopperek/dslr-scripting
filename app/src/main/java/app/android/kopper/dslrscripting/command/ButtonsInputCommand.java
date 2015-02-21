@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import app.android.kopper.dslrscripting.IWorkerUtil;
 import app.android.kopper.dslrscripting.ProgressActivity;
 import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.inputer.IInputer;
 import app.android.kopper.dslrscripting.util.ConvertUtil;
 
@@ -34,9 +35,9 @@ public class ButtonsInputCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(final ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(final ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()<2)
-            throw new Exception(getName()+" requires at least two parameters");
+            throw new RException(R.string.error_method_requires_at_least_two,getName());
         final String message=ConvertUtil.toString(params.get(0));
         return util.input(new IInputer(){
             @Override

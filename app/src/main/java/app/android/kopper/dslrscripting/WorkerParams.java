@@ -23,7 +23,7 @@ public class WorkerParams {
     private final UsbDevice device;
     private final UsbManager usbManager;
     private final Resources resources;
-    private String selectedScript;
+    private final String selectedScript;
 
 
     public WorkerParams(UsbManager usbManager, UsbDevice device,Resources resources, String selectedScript) {

@@ -17,10 +17,10 @@ import app.android.kopper.dslrscripting.inputer.IInputer;
  * Lesser General Public License for more details.
  */
 public interface IWorkerUtil {
-    boolean isInterrupted() throws InterruptedException;
-    void log(String s) throws InterruptedException;
-    void cameraCommand(PureCommand command) throws Exception;
-    void waitForNoBusy() throws Exception;
-    Object input(IInputer inputer) throws java.lang.InterruptedException, InterruptedException;
-    void openPreview();
+    boolean isInterrupted() throws RException;
+    void log(String s) throws RException;
+    void cameraCommand(PureCommand command) throws RException;
+    void waitForNoBusy() throws RException;
+    Object input(IInputer inputer) throws RException;
+    void waitWhile(int time) throws RException;
 }

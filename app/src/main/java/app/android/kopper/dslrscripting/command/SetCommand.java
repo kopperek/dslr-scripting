@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
 import app.android.kopper.dslrscripting.PureCommand;
+import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.command.converter.IConverter;
 import app.android.kopper.dslrscripting.constants.DeviceProp;
 
@@ -33,9 +35,9 @@ public class SetCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()!=1)
-            throw new Exception(getName()+" requires one parameter");
+            throw new RException(R.string.error_method_requires_one,getName());
         PureCommand propValueCommand=new PureCommand(PureCommand.SET_DEVICE_PROP_VALUE);
         propValueCommand.addParam(Long.valueOf(property.getCode()));
         Object value=params.get(0);

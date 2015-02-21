@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
+import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.command.AbstractCommand;
 
 /**
@@ -26,12 +28,12 @@ public class ArraySizeCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()!=1)
-            throw new Exception(getName()+" requires one parameter");
+            throw new RException(R.string.error_method_requires_one,getName());
         Object obj=params.get(0);
         if(obj instanceof List)
             return(((List)obj).size());
-        throw new Exception("Parameter has to be an array");
+        throw new RException(R.string.error_parameter_has_to_be_an_array);
     }
 }

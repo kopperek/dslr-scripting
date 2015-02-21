@@ -1,12 +1,12 @@
 package app.android.kopper.dslrscripting.inputer;
 
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import app.android.kopper.dslrscripting.IInputVerifier;
 import app.android.kopper.dslrscripting.ProgressActivity;
 import app.android.kopper.dslrscripting.R;
-import app.android.kopper.dslrscripting.util.LogUtil;
 
 /**
  * Created by kopper on 2015-02-18.
@@ -42,12 +42,19 @@ public class TextInputInputter extends AbstractInputInputer {
         String inputtedResult="";
         if(verifier!=null) {
             inputtedResult=((EditText)progressActivity.findViewById(R.id.input_value)).getText().toString();
-            LogUtil.i("inputtedResult: "+inputtedResult);
             if(!verifier.check(inputtedResult)) {
                 Toast.makeText(progressActivity.getApplicationContext(),verifier.getErrorMessage(inputtedResult),Toast.LENGTH_SHORT).show();
                 return null;
             }
         }
         return(inputtedResult);
+    }
+
+    @Override
+    public void updateLayout(ProgressActivity progressActivity,LinearLayout buttonsLayout) {
+        super.updateLayout(progressActivity,buttonsLayout);
+        if(verifier!=null)
+            verifier.updateLayout(progressActivity);
+        progressActivity.findViewById(R.id.input_value).requestFocus();
     }
 }

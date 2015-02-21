@@ -3,6 +3,8 @@ package app.android.kopper.dslrscripting.command;
 import java.util.ArrayList;
 
 import app.android.kopper.dslrscripting.IWorkerUtil;
+import app.android.kopper.dslrscripting.R;
+import app.android.kopper.dslrscripting.RException;
 import app.android.kopper.dslrscripting.util.ConvertUtil;
 
 /**
@@ -26,14 +28,14 @@ public class WaitCommand extends AbstractCommand {
     }
 
     @Override
-    public Object execute(ArrayList params,IWorkerUtil util) throws Exception {
+    public Object execute(ArrayList params,IWorkerUtil util) throws RException {
         if(params.size()!=1)
-            throw new Exception(getName()+" requires one parameter");
+            throw new RException(R.string.error_method_requires_one,getName());
         int i=ConvertUtil.toInteger(params.get(0));
         util.log("Wait "+(i*.1)+" s");
         for(int a=0;a<i;a++) {
             util.isInterrupted();
-            Thread.sleep(100);
+            util.waitWhile(100);
         }
         return null;
     }

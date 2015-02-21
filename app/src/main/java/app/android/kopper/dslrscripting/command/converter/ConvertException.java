@@ -1,5 +1,7 @@
 package app.android.kopper.dslrscripting.command.converter;
 
+import app.android.kopper.dslrscripting.RException;
+
 /**
  * Created by kopper on 2015-02-07.
  * (C) Copyright 2015 kopperek@gmail.com
@@ -14,8 +16,8 @@ package app.android.kopper.dslrscripting.command.converter;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  */
-public class ConvertException extends Exception {
-    public ConvertException(String s) {
-        super(s);
+public class ConvertException extends RException {
+    public ConvertException(int key,Object... params) {
+        super(key,params);
     }
 }
