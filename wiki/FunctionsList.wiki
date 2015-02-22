@@ -39,12 +39,12 @@ presents message and set of buttons. it returns number of button that was select
 {{{
 int inputNumber(String message, int minValue, int maxValue)
 }}}
-shows message and wait for user to put a number. number has to be in between minValue and maxValue. it returns entered number
+shows a message and wait for user to put a number. number has to be in between minValue and maxValue. it returns entered number
 
 {{{
 message(String message)
 }}}
-shows message to user and waits for confirmation (ok button)
+shows a message to user and waits for confirmation (ok button)
 
 {{{
 int question(String message)
@@ -54,7 +54,7 @@ asks a question (message) and wait for an answer. user can select yes or no answ
 {{{
 log(String message)
 }}}
-adds message to logs stack
+adds a message to logs stack
 
 {{{
 wait(int time)
@@ -75,7 +75,7 @@ tries to set focus on frame. command is ignored when manual focus is set
 
 = Camera properties functions =
 
-List of properties is valid for nikon D5100. For other cameras some of functions can be unavailable.
+List of properties is valid for nikon D5100. For other cameras some of the functions can be unavailable.
 
 <table>
 		<tr>
