@@ -1,12 +1,12 @@
 DSLR Scripting gives you a possibility to control your dslr camera via script running on your android device. You can think of this app as a programmable remote shutter.
 
 Simple script can look like this:
-
-    while 1
-        message("Press 'OK' to take photo")
-        capture()
-    endwhile
-
+```java
+while 1
+    message("Press 'OK' to take photo")
+    capture()
+endwhile
+```
 
 It waits for a user to click ‘OK’ button and then takes a photo. An infinite loop makes this process repetitive.
 
@@ -25,9 +25,11 @@ List of available functions can be found here: https://code.google.com/p/dslr-sc
 
 Every script can be described with three tags:
 
-    #name: <name of the script>
-    #desc: <short description of the script>
-    #author: <author of the script>
+```java
+#name: <name of the script>
+#desc: <short description of the script>
+#author: <author of the script>
+```
 
 Every tag acts as a comment in code so it doesn’t influence script itself. Values from this tags are displayed on your android device on a scripts list.
 
