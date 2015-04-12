@@ -21,7 +21,7 @@ Scripting language is based on FScript by murlen (http://fscript.sourceforge.net
 
 DSLR Scripting introduces one important change - variables don’t have to be declared before use. If you use undeclared variable for the very first time it is integer with 0 value.
 
-List of available functions can be found here: https://code.google.com/p/dslr-scripting/wiki/FunctionsList
+List of available functions can be found here: https://github.com/kopperek/dslr-scripting/blob/master/functionslist.md
 
 Every script can be described with three tags:
 
